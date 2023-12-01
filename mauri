@@ -1,0 +1,270 @@
+import os
+def apagar( ):
+
+    nome_arquivo = "cad_valor.txt"
+
+    #Verifica se o arquivo existe antes de tentar apagar
+    if os.path.exists(nome_arquivo):
+        os.remove(nome_arquivo)
+        print(f"O arquivo {nome_arquivo} foi apagado com sucesso.")
+    else:
+        print(f"O arquivo {nome_arquivo} não existe.")
+
+    nome_arquivo = "cad_item.txt"
+
+    #Verifica se o arquivo existe antes de tentar apagar
+    if os.path.exists(nome_arquivo):
+        os.remove(nome_arquivo)
+        print(f"O arquivo {nome_arquivo} foi apagado com sucesso.")
+    else:
+        print(f"O arquivo {nome_arquivo} não existe.")
+
+    nome_arquivo = "cad_quant.txt"
+
+    #Verifica se o arquivo existe antes de tentar apagar
+    if os.path.exists(nome_arquivo):
+        os.remove(nome_arquivo)
+        print(f"O arquivo {nome_arquivo} foi apagado com sucesso.")
+    else:
+        print(f"O arquivo {nome_arquivo} não existe.")
+        
+
+
+def redefinir_senha( ):
+  if login()==True:
+      usuario=input("Digite um nome para seu usuário")
+      senha=input("Crie uma senha de 6 dígitos para o acesso")
+
+      if usuario != "" and senha != "" and len(senha)>=6:
+          with open("senha.txt", "w") as arquivo:
+              arquivo.write(usuario + "\n" + senha)
+          print("cadastro realizado com sucesso")
+  else:
+    menu( )
+
+def login():
+    usuario = input("Digite seu usuário:\n")
+    entrar = False
+    with open("senha.txt", "r") as arquivo:
+        dados = arquivo.readlines()
+
+    if usuario + "\n" == dados[0]:
+        senha = input("Digite sua senha:\n")
+        if senha == dados[1]:
+            entrar = True
+            print("Login concluído")
+        else:
+            print("Senha incorreta")
+    else:
+        print("Usuário não cadastrado")
+    return entrar
+
+
+
+
+def cadastro( ):
+    nome_arquivo = "senha.txt"
+    if os.path.exists(nome_arquivo):
+        print("O sistema já possui seu usuáio padrão")
+        return True
+    else:
+        usuario=input("Digite um nome para seu usuário")
+        senha=input("Crie uma senha de 6 dígitos para o acesso")
+
+        if usuario != "" and senha != "" and len(senha)>=6:
+            with open("senha.txt", "w") as arquivo:
+                arquivo.write(usuario + "\n" + senha)
+            print("cadastro realizado com sucesso")
+            return True
+        else:
+            print("erro")
+            return False
+
+def primeiroitemcad( ):
+    print("Você agora criou uma lista de produtos, valores e uma de quantidade, prossiga o cadastro")
+    item = input("Digite qual item deseja cadastrar:\n")
+    conf = int(input("Confirma essa ação?\n1-Sim e 2-Não: "))
+    print(f"Você escolheu a conf: {conf}")
+    if conf == 1:
+        valor = input("Digite qual o valor do ítem:\n")
+        conf = int(input("Confirma essa ação?\n1-Sim e 2-Não: "))
+        print(f"Você escolheu a conf: {conf}")
+        if conf == 1:
+            quant = input("quantidade do ítem: ")
+            conf = int(input("Confirma essa ação?\n1-Sim e 2-Não: "))
+            if conf==1:
+                with open("cad_item.txt", "w") as arquivo:  
+                    arquivo.write(item + "\n")
+                with open("cad_valor.txt", "w") as arquivo:  
+                    arquivo.write(valor + "\n")
+                with open("cad_quant.txt", "w") as arquivo:  
+                    arquivo.write(quant + "\n")
+                print("Primeiro cadastro concluído")
+
+    with open("cad_item.txt", "r") as arquivo:
+        dados = arquivo.readlines()
+        print(dados)
+
+
+def outroscad():
+    cad = True
+    while cad:
+        item = input("Digite qual item deseja cadastrar:\n")
+        conf = int(input("Confirma essa ação?\n1-Sim e 2-Não: "))
+
+        print(f"Você escolheu a conf: {conf}")
+        teste=item+"\n"
+        with open("cad_item.txt", "r") as arquivo:
+            prodcad = arquivo.readlines()
+        presente = teste in prodcad
+        print(presente)
+        if conf == 1 and not presente:
+            valor = input("Digite qual valor do item a ser cadastrado:")
+            quantidade=input("Digite a quantidade disponível: ")
+            conf1 = int(input("Confirma essas ações? 1-Sim   2-Não: "))
+            print(f"Você escolheu a conf1: {conf1}")
+
+            if conf1 == 1:
+                with open("cad_item.txt", "a") as arquivo:  
+                    arquivo.write(item + "\n")
+                with open("cad_valor.txt", "a") as arquivo: 
+                    arquivo.write(valor + "\n")
+                with open("cad_quant.txt", "a") as arquivo: 
+                    arquivo.write(quantidade + "\n")
+                print("Cadastro de item completo")
+        else:
+            print("Operação cancelada, se você não escolheu essa opção, o produto já possuicadastro, indica-se editar seus dados")
+
+        conf = int(input("Deseja cadastrar outro produto? 1-Sim   2-Não: "))
+        print(f"Você escolheu a conf (final): {conf}")
+
+        if conf != 1:
+            print("Cadastro realizado com sucesso")
+            cad = False
+        print("Processo encerrado")
+
+def gerencia( ):
+
+
+    with open("cad_item.txt", "r") as arquivo:
+        produtos = arquivo.readlines()
+    with open("cad_valor.txt", "r") as arquivo:
+        valores = arquivo.readlines()
+    with open("cad_quant.txt", "r") as arquivo:
+        quantidade = arquivo.readlines()
+
+    pesq=input("Qual item deseja pesquisar: ")
+    pesq=pesq+"\n"
+
+    if pesq in produtos:
+        index = produtos.index(pesq)
+
+        print("Opções de gerencia\n 1-pesquisar sobre item específico \n2-editar dado de um item\n3-excluir ítem")
+        escolha=int(input("escolha a ação desejada: "))
+        match escolha:
+            case 1:
+                produto=produtos[index]
+                preco=valores[index]
+                quant=quantidade[index]
+                print((f"{produto}valor:$ {preco}quant. {quant}"))
+            case 2:
+                opc=int(input("Esolha a edição:\1-nome do produto\n 2-valor\n 3-quantidade"))
+                match opc:
+                    case 1:
+                        novonome=input("Digite a edição")
+                        produtos[index]=novonome
+                        with open("cad_item.txt", "w") as arquivo:
+                            for item in produtos:
+                                item=item+"\n"
+                                arquivo.write(item)
+
+                    case 2:
+                        valornovo=input("Digite a edição")
+                        valores[index]=valornovo
+                        with open("cad_valor.txt", "w") as arquivo:
+                          for valor in valores:
+                              arquivo.write(valor)
+                    case 3:
+                        quantnova=input("Digite a edição")
+                        quantidade[index]=quantnova
+                        with open("cad_quant.txt", "w") as arquivo:
+                          for quant in quantidade:
+                              arquivo.write(quant)
+            case 3:
+                del produtos[index]
+                del valores[index]
+                del quantidade[index]
+                with open("cad_item.txt", "w") as arquivo:
+                  for item in produtos:
+                    arquivo.write(item)
+                with open("cad_valor.txt", "w") as arquivo:
+                  for valor in valores:
+                    arquivo.write(valor)
+                with open("cad_quant.txt", "w") as arquivo:
+                  for quant in quantidade:
+                    arquivo.write(quant)
+    else:
+        print("produto não encontrado")
+    menu( )
+
+def visual():
+    with open("cad_item.txt", "r") as arquivo:
+      produtos = arquivo.readlines()
+    with open("cad_valor.txt", "r") as arquivo:
+      valores = arquivo.readlines()
+    with open("cad_quant.txt", "r") as arquivo:
+      quantidade = arquivo.readlines()
+
+    matriz = []
+    linha = ["Produto", "valor", "quant"]
+    matriz.append(linha)
+    for i in range(len(produtos)):
+        item = produtos[i]
+        item=item.replace("\n", "")
+        valor = valores[i]
+        valor=valor.replace("\n", "")
+        quant = quantidade[i]
+        quant=quant.replace("\n", "")
+
+        linha = [item, valor, quant]
+        matriz.append(linha)
+
+    for linha in matriz:
+        print(linha)
+
+
+def menu( ):
+    print("Escolha qual ação deseja realizar:\n1-Cadastrar novo ítem\n2-Visualizar ítens disponíveis\n3-Gerenciar estoque\n4-resetar dados\n5-Redefinir login\n6-sair do sistema\n")
+    esc=int(input("Digite sua escolha:"))
+    match esc:
+        case 1:
+            if os.path.exists("cad_item.txt") == False:
+                print(os.path.exists("cad_item.txt"))
+                primeiroitemcad( )
+            else:
+                print("entrou")
+                outroscad( )
+            menu( )
+        case 2:
+            visual( )
+            menu( )
+        case 3:
+            gerencia( )
+
+        case 4:
+            if login( )==True:
+                apagar( )
+                menu( )
+            else:
+                print("operação cancelada")
+        case 5:
+          redefinir_senha( )
+          menu( )
+
+while cadastro( )==False:
+    cadastro( )
+while login( )==False:
+    login( )
+menu( )
+
+
